@@ -6,7 +6,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     private int _day = 1;
-    private bool _gamePaused = false;
+    [SerializeField] private bool _gamePaused = false;
 
     public event Action<int> startDay;
 

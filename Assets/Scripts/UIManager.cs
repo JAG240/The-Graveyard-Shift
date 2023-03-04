@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private VisualTreeAsset nextDayUI;
     [SerializeField] private VisualTreeAsset mainMenuUI;
+    [SerializeField] private VisualTreeAsset pauseMenuUI;
 
     private static UIManager _instance;
     public static UIManager Instance { get{ return _instance; }}
@@ -61,13 +62,52 @@ public class UIManager : MonoBehaviour
         _levelManager.StartDay();
     }
 
+    private void PauseDay(bool state)
+    {
+        if (state)
+        {
+            _uiDoc.visualTreeAsset = pauseMenuUI;
+            VisualElement root = _uiDoc.rootVisualElement;
+            Button resume = root.Q<Button>("Resume");
+            Button quit = root.Q<Button>("Quit");
+            quit.clicked += Application.Quit;
+            resume.clicked += Pause;
+        }
+        else
+        {
+            VisualElement root = _uiDoc.rootVisualElement;
+            Button resume = root.Q<Button>("Resume");
+            Button quit = root.Q<Button>("Quit");
+            resume.clicked -= Pause;
+            quit.clicked -= Application.Quit;
+            _uiDoc.visualTreeAsset = null;
+        }
+    }
+
+    private void ExitToMainMenu()
+    {
+        VisualElement root = _uiDoc.rootVisualElement;
+        Button quit = root.Q<Button>("Quit");
+        quit.clicked -= ExitToMainMenu;
+        _levelManager.endDay -= EndDay;
+        _levelManager.startDay -= StartDay;
+        _levelManager.pauseDay -= PauseDay;
+        _sceneManager.LoadScene("Main Menu");
+    }
+
+    private void Pause()
+    {
+        _levelManager.PauseDay();
+    }
+
     private void CheckForGameScene(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Graveyard")
+        if (scene.name == "Graveyard")
         {
             _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
             _levelManager.endDay += EndDay;
             _levelManager.startDay += StartDay;
+            _levelManager.pauseDay += PauseDay;
         }
         else if(scene.name == "Main Menu")
         {
@@ -95,9 +135,9 @@ public class UIManager : MonoBehaviour
         VisualElement root = _uiDoc.rootVisualElement;
 
         Button play = root.Q<Button>("Play");
-
+        Button quit = root.Q<Button>("Quit");
         play.clicked -= LoadGraveyard;
-
+        quit.clicked -= Application.Quit;
         _uiDoc.visualTreeAsset = null;
 
         _sceneManager.LoadScene("Graveyard");

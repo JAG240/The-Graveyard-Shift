@@ -364,6 +364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextDayUI: {fileID: 9197481963319205126, guid: 40b2f59d2c0c4104c99faa6bec4d06ec, type: 3}
   mainMenuUI: {fileID: 9197481963319205126, guid: b19197af4ad33d84da2b238b3559155f, type: 3}
+  pauseMenuUI: {fileID: 9197481963319205126, guid: f3dbe656e458ca24db67b05ffb4938f8, type: 3}
 --- !u!4 &1955790444
 Transform:
   m_ObjectHideFlags: 0

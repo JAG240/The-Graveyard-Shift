@@ -26,9 +26,7 @@ public class PlayerController : MonoBehaviour
 
         _levelManager.endDay += EndDay;
         _levelManager.startDay += StartDay;
-        _levelManager.pauseDay += MovementEnabled;
-
-        MovementEnabled(true);
+        _levelManager.pauseDay += MovementDisabled;
     }
 
     public void OnMove(InputValue value)
@@ -58,12 +56,12 @@ public class PlayerController : MonoBehaviour
 
     public void EndDay()
     {
-        MovementEnabled(false);
+        MovementDisabled(true);
     }
 
     public void StartDay(int day)
     {
-        MovementEnabled(true);
+        MovementDisabled(false);
     }
 
     public void OnFire(InputValue value)
@@ -90,13 +88,13 @@ public class PlayerController : MonoBehaviour
         _swingDisabled = state;
     }
 
-    public void MovementEnabled(bool state)
+    public void MovementDisabled(bool state)
     {
         _body.velocity = Vector2.zero;
-        _moveSpeed = state ? movementSpeed : 0;
-        _swingCooldown = !state;
-        Cursor.lockState = state ? CursorLockMode.Locked : CursorLockMode.None;
-        Cursor.visible = !state;
+        _moveSpeed = state ? 0 : movementSpeed;
+        _swingCooldown = state;
+        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = state;
     }
 
     public void CheckSwing()
