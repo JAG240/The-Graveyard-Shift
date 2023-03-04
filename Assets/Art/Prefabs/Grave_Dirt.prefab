@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8105722096612748813}
   - component: {fileID: 8105722096612748812}
+  - component: {fileID: 8109060427514513066}
+  - component: {fileID: 7870040021414901740}
   m_Layer: 0
   m_Name: Grave_Dirt
   m_TagString: Untagged
@@ -84,3 +86,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &8109060427514513066
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8105722096612748810}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.03866645, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.3555095
+--- !u!114 &7870040021414901740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8105722096612748810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d91ed4a4c450f48a9273d46b17b58d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2
+  health: 2
