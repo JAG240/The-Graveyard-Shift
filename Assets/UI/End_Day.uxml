@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="root" style="height: auto;">
+        <ui:VisualElement name="Progress" style="height: 1224px;" />
+        <ui:GroupBox name="Buttons" style="flex-wrap: nowrap; flex-direction: row; justify-content: center; height: 30%; width: 100%;">
+            <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="Quit" style="height: auto; justify-content: center; align-items: center; font-size: 50%;" />
+            <ui:Button text="Next Day" display-tooltip-when-elided="true" name="NextDay" style="font-size: 52%;" />
+        </ui:GroupBox>
+    </ui:VisualElement>
+</ui:UXML>

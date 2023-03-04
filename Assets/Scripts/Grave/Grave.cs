@@ -6,7 +6,7 @@ public class Grave : MonoBehaviour, IHitable
 {
     [SerializeField] private int maxHealth = 1;
     [SerializeField] private int health = 1;
-    [SerializeField] private GameObject drop;
+    public GameObject drop;
 
     private SpriteRenderer _renderer;
 
@@ -26,7 +26,19 @@ public class Grave : MonoBehaviour, IHitable
         if(health == 0 && drop)
         {
             Instantiate(drop, transform.position, Quaternion.identity);
+            drop = null;
         }
+    }
+
+    public bool IsDug()
+    {
+        return health == 0 ? true : false;
+    }
+
+    public void SetDug(bool state)
+    {
+        health = state ? 0 : maxHealth;
+        UpdateSprite();
     }
 
     private void UpdateSprite()

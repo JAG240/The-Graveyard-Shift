@@ -8,7 +8,9 @@ public class BodyPart : MonoBehaviour
     {
         if(collision.gameObject.transform.name == "Player")
         {
-            Destroy(gameObject);
+            PlayerInventory inv = collision.gameObject.GetComponent<PlayerInventory>();
+            if(inv.AddToHand(transform.name))
+                Destroy(gameObject);
         }
     }
 }

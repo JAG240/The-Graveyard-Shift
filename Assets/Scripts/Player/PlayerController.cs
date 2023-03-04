@@ -14,12 +14,21 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private float _moveSpeed;
     private bool _swingCooldown;
+    private bool _swingDisabled = false;
+    private LevelManager _levelManager;
 
     private void Start()
     {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _moveSpeed = movementSpeed;
+        _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+
+        _levelManager.endDay += EndDay;
+        _levelManager.startDay += StartDay;
+        _levelManager.pauseDay += MovementEnabled;
+
+        MovementEnabled(true);
     }
 
     public void OnMove(InputValue value)
@@ -34,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
         _animator.SetBool("IsWalking", walking);
 
-        if(movement.x != 0)
+        if(movement.x != 0 && _moveSpeed != 0)
         {
             bool left = movement.x < 0 ? true : false;
             _animator.SetBool("IsLeft", left);
@@ -42,9 +51,24 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void OnPause()
+    {
+        _levelManager.PauseDay();
+    }
+
+    public void EndDay()
+    {
+        MovementEnabled(false);
+    }
+
+    public void StartDay(int day)
+    {
+        MovementEnabled(true);
+    }
+
     public void OnFire(InputValue value)
     {
-        if (!_swingCooldown)
+        if (!_swingCooldown && !_swingDisabled)
             StartCoroutine(Swing());
     }
 
@@ -59,6 +83,20 @@ public class PlayerController : MonoBehaviour
         _moveSpeed = movementSpeed;
         yield return new WaitForSeconds(swingCooldown);
         _swingCooldown = false;
+    }
+
+    public void SwingDisabled(bool state)
+    {
+        _swingDisabled = state;
+    }
+
+    public void MovementEnabled(bool state)
+    {
+        _body.velocity = Vector2.zero;
+        _moveSpeed = state ? movementSpeed : 0;
+        _swingCooldown = !state;
+        Cursor.lockState = state ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !state;
     }
 
     public void CheckSwing()
