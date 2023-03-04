@@ -7,12 +7,12 @@ public class LookAround : State
     private float timeCount;
 
     public LookAround(GuardMachine guardMachine) : base(guardMachine)
-    {
-        timeCount = 0.0f;
+    {  
     }
 
     public override IEnumerator OnEnter()
     {
+        timeCount = 0.0f;
         return base.OnEnter();
     }
 
@@ -25,9 +25,20 @@ public class LookAround : State
     {
         if (this.guardMachine.currentTargetRotation == null) return base.OnUpdate();
 
-        this.guardMachine.transform.rotation = Quaternion.Lerp(this.guardMachine.transform.rotation, Quaternion.AngleAxis(this.guardMachine.currentTargetRotation.Value, Vector3.forward), timeCount);
+        float currentRotation = this.guardMachine.currentRotation;
+        if (currentRotation <= 0)
+        {
+            currentRotation += 360;
+        }
+
+        this.guardMachine.currentRotation = Mathf.Lerp(currentRotation, this.guardMachine.currentTargetRotation.Value, timeCount);
         timeCount += Time.deltaTime;
         
+        if (timeCount >= 1)
+        {
+            this.guardMachine.nextLook();
+        }
+
         return base.OnUpdate();
     }
 }
