@@ -16,8 +16,17 @@ public class GuardMachine : MonoBehaviour
     LinkedListNode<Patrol> currentPatrol;
     public LinkedListNode<Vector3> currentTargetPosition;
     public LinkedListNode<float> currentTargetRotation;
+    public float currentRotation;
 
     public Vector3 start;
+
+    public float angle = 50.0f;
+    public float rayRange = 6.0f;
+
+    [SerializeField]
+    public GameObject visionIndicator;
+    [SerializeField]
+    public Vector3 offset;
 
     public void SetState(State state)
     {
@@ -35,8 +44,6 @@ public class GuardMachine : MonoBehaviour
         patrols = new LinkedList<Patrol>(inputPatrols);
         currentPatrol = patrols.First;
 
-        Debug.Log(currentPatrol.Next.Value);
-
         if (patrols.Count == 0) return;
 
         CurrentPatrolToLinkedList();
@@ -48,6 +55,8 @@ public class GuardMachine : MonoBehaviour
 
     void Update()
     {
+        visionIndicator.transform.rotation = Quaternion.Euler(0, 0, currentRotation - 45);
+
         if (patrols.Count == 0) return;
 
         state.OnUpdate();
@@ -56,31 +65,53 @@ public class GuardMachine : MonoBehaviour
             && currentTargetPosition != null
             && Vector3.Distance(transform.position, currentTargetPosition.Value) <= 0.1)
         {
-            if (currentTargetPosition.Next == null)
-            {
-                SetState(new LookAround(this));
-                return;
-            }
-    
-            currentTargetPosition = currentTargetPosition.Next;
-            
+
+            nextPosition();
         }
 
-        if (state.GetType() == typeof(LookAround) 
-            && currentTargetRotation != null
-            && Quaternion.AngleAxis(currentTargetRotation.Value, Vector3.forward) == transform.rotation)
+        if (state.GetType() == typeof(LookAround) && currentTargetRotation == null)
         {
-            if (currentTargetRotation.Next == null) 
-            {
-                currentPatrol = (currentPatrol == null) ? patrols.First : currentPatrol.Next;
-                CurrentPatrolToLinkedList();
+            nextLook();
+        }
+    }
 
-                SetState(new Patroling(this));
+    public void nextPosition()
+    {
+        if (currentTargetPosition.Next == null)
+        {
+
+            if (currentTargetRotation == null)
+            {
+                nextPatrol();
                 return;
             }
 
-            currentTargetRotation = currentTargetRotation.Next;
+            SetState(new LookAround(this));
+            return;
         }
+
+        state.OnEnter();
+        currentTargetPosition = currentTargetPosition.Next;
+    }
+
+    public void nextLook()
+    {
+        if (currentTargetRotation.Next == null)
+        {
+            nextPatrol();
+            CurrentPatrolToLinkedList();
+
+            SetState(new Patroling(this));
+            return;
+        }
+
+        currentTargetRotation = currentTargetRotation.Next;
+    }
+
+    public void nextPatrol() 
+    {
+        currentPatrol = (currentPatrol.Next == null) ? patrols.First : currentPatrol.Next;
+        CurrentPatrolToLinkedList();
     }
 
     void CurrentPatrolToLinkedList()
@@ -101,6 +132,10 @@ public class GuardMachine : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        /* vision debugging
+         * Vector3 dir = Quaternion.AngleAxis(currentRotation, Vector3.forward) * Vector3.right;
+        Gizmos.DrawLine(transform.position + dir + offset, transform.position + (dir * 2) + offset);*/
+
         if (start == Vector3.zero) start = transform.position; 
 
         Vector3 prevPoint = start;
