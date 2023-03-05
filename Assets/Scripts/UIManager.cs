@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VisualTreeAsset nextDayUI;
     [SerializeField] private VisualTreeAsset mainMenuUI;
     [SerializeField] private VisualTreeAsset pauseMenuUI;
+    [SerializeField] private GameObject BodyProgress;
 
     private static UIManager _instance;
     public static UIManager Instance { get{ return _instance; }}
@@ -16,6 +17,7 @@ public class UIManager : MonoBehaviour
     private LevelManager _levelManager;
     private UIDocument _uiDoc;
     private GameSceneManager _sceneManager;
+    private SoundManager _soundManager;
 
     private void Awake()
     {
@@ -34,6 +36,11 @@ public class UIManager : MonoBehaviour
         SceneManager.sceneLoaded += CheckForGameScene;
     }
 
+    private void Start()
+    {
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+    }
+
     private void EndDay()
     {
         _uiDoc.visualTreeAsset = nextDayUI;
@@ -42,12 +49,49 @@ public class UIManager : MonoBehaviour
 
         Button nextDay = root.Q<Button>("NextDay");
 
+        if(_levelManager.GetDay() == 6)
+        {
+            nextDay.visible = false;
+        }
+
+        DisplayBody();
+
         nextDay.clicked += LoadNextLevel;
 
     }
 
+    private void DisplayBody()
+    {
+        foreach(string part in _levelManager.bodyParts)
+        {
+            GameObject check = BodyProgress.transform.Find(part).gameObject;
+
+            if (check)
+                check.SetActive(true);
+        }
+
+        BodyProgress.SetActive(true);
+    }
+
     private void StartDay(int day)
     {
+        if(day == 0)
+        {
+            _uiDoc.visualTreeAsset = nextDayUI;
+
+            VisualElement root = _uiDoc.rootVisualElement;
+
+            Button nextDay = root.Q<Button>("NextDay");
+
+            Label text = root.Q<Label>("Text");
+            text.text = "They all call me mad but, I'll show them. No! We'll show them! I will get the body parts I need from this graveyard and I will bring you back to life. Together we will show them all! I just need you!";
+
+            _levelManager.OverrideDay();
+
+            nextDay.clicked += LoadNextLevel;
+            return;
+        }
+
         _uiDoc.visualTreeAsset = null;
     }
 
@@ -56,6 +100,8 @@ public class UIManager : MonoBehaviour
         VisualElement root = _uiDoc.rootVisualElement;
 
         Button nextDay = root.Q<Button>("NextDay");
+
+        BodyProgress.SetActive(false);
 
         nextDay.clicked -= LoadNextLevel;
 
@@ -108,6 +154,7 @@ public class UIManager : MonoBehaviour
             _levelManager.endDay += EndDay;
             _levelManager.startDay += StartDay;
             _levelManager.pauseDay += PauseDay;
+            _soundManager.PlayGameMusic();
         }
         else if(scene.name == "Main Menu")
         {

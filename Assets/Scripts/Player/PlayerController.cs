@@ -61,6 +61,12 @@ public class PlayerController : MonoBehaviour
 
     public void StartDay(int day)
     {
+        if (day == 0)
+        {
+            MovementDisabled(true);
+            return;
+        }
+
         MovementDisabled(false);
     }
 
@@ -95,6 +101,16 @@ public class PlayerController : MonoBehaviour
         _swingCooldown = state;
         Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = state;
+    }
+
+    public void PlayFootStep()
+    {
+        SoundManager.Instance.PlayFootStep();
+    }
+
+    public void PlaySwing()
+    {
+        SoundManager.Instance.PlaySwing();
     }
 
     public void CheckSwing()

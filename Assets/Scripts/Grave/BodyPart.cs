@@ -10,7 +10,10 @@ public class BodyPart : MonoBehaviour
         {
             PlayerInventory inv = collision.gameObject.GetComponent<PlayerInventory>();
             if(inv.AddToHand(transform.name))
+            {
                 Destroy(gameObject);
+                SoundManager.Instance.PlayPickup();
+            }
         }
     }
 }

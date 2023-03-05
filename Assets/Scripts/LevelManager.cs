@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    private int _day = 1;
+    private int _day = 0;
+    public List<string> bodyParts = new List<string>();
     [SerializeField] private bool _gamePaused = false;
 
     public event Action<int> startDay;
@@ -40,6 +41,16 @@ public class LevelManager : MonoBehaviour
         pauseDay.Invoke(_gamePaused);
     }
 
+    public void OverrideDay()
+    {
+        _day = 1;
+    }
+
+    public int GetDay()
+    {
+        return _day;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.transform.name == "Player")
@@ -49,6 +60,7 @@ public class LevelManager : MonoBehaviour
 
             if(!string.IsNullOrEmpty(inHand))
             {
+                bodyParts.Add(inHand);
                 EndDay();
             }
         }
