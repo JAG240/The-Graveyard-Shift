@@ -17,6 +17,8 @@ public class KnockedOut : State
 
     public override IEnumerator OnExit()
     {
+        this.guardMachine.visionIndicator.SetActive(true);
+        this.guardMachine.transform.rotation = new Quaternion(0, 0, 0, 0);
         return base.OnExit();
     }
 

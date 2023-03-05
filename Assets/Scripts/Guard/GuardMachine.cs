@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardMachine : MonoBehaviour
+public class GuardMachine : MonoBehaviour, IHitable
 {
+    [SerializeField]
+    public State prevState;
     [SerializeField]
     public State state;
     [SerializeField]
@@ -28,6 +30,9 @@ public class GuardMachine : MonoBehaviour
     [SerializeField]
     public Vector3 offset;
 
+    [SerializeField]
+    public LevelManager levelManager;
+
     public void SetState(State state)
     {
         if (this.state != null)
@@ -41,10 +46,26 @@ public class GuardMachine : MonoBehaviour
 
     void Start()
     {
+        levelManager.pauseDay += Pause;
+
         patrols = new LinkedList<Patrol>(inputPatrols);
         currentPatrol = patrols.First;
 
         if (patrols.Count == 0) return;
+
+        CurrentPatrolToLinkedList();
+
+        start = transform.position;
+
+        SetState(new Patroling(this));
+    }
+
+    void OnEnable()
+    {
+        patrols = new LinkedList<Patrol>(inputPatrols);
+        currentPatrol = patrols.First;
+
+        if (patrols == null || patrols.Count == 0) return;
 
         CurrentPatrolToLinkedList();
 
@@ -77,6 +98,8 @@ public class GuardMachine : MonoBehaviour
 
     public void nextPosition()
     {
+        SetState(new KnockedOut(this));
+        return;
         if (currentTargetPosition.Next == null)
         {
 
@@ -132,9 +155,9 @@ public class GuardMachine : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        /* vision debugging
-         * Vector3 dir = Quaternion.AngleAxis(currentRotation, Vector3.forward) * Vector3.right;
-        Gizmos.DrawLine(transform.position + dir + offset, transform.position + (dir * 2) + offset);*/
+        /* vision debugging*/
+        Vector3 dir = Quaternion.AngleAxis(currentRotation, Vector3.forward) * Vector3.right;
+        Gizmos.DrawLine(transform.position + dir + offset, transform.position + (dir * 2) + offset);
 
         if (start == Vector3.zero) start = transform.position; 
 
@@ -155,7 +178,7 @@ public class GuardMachine : MonoBehaviour
             }
             foreach(float lookAtPoint in patrol.lookAtPoints)
             {
-                Vector3 dir = Quaternion.AngleAxis(lookAtPoint, Vector3.forward) * Vector3.right;
+                dir = Quaternion.AngleAxis(lookAtPoint, Vector3.forward) * Vector3.right;
                 Gizmos.color = Color.green;
                 Gizmos.DrawSphere(prevPoint + dir, 0.2f);
 
@@ -163,4 +186,20 @@ public class GuardMachine : MonoBehaviour
         }
     }
 
+    void Pause(bool paused)
+    {
+        if (paused)
+        {
+            prevState = state;
+            SetState(new Paused(this));
+        } else
+        {
+            SetState(prevState);
+        }
+    }
+
+    public void Hit(int damage)
+    {
+        SetState(new KnockedOut(this));
+    }
 }

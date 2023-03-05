@@ -32,9 +32,9 @@ public class Patroling : State
                 Vector3 dir = this.guardMachine.currentTargetPosition.Value - this.guardMachine.transform.position;
                 float angle = Vector3.Angle(dir, this.guardMachine.transform.right);
                 if (this.guardMachine.currentTargetPosition.Value.y < this.guardMachine.transform.position.y) angle *= -1;
-                if (angle > 180) angle -= 360;
+                //if (angle > 180) angle -= 360;
                 float currRot = this.guardMachine.currentRotation;
-                if (currRot > 180) currRot -= 360;
+                //if (currRot > 180) currRot -= 360;
 
                 this.guardMachine.currentRotation = Mathf.Lerp(currRot, angle, timeCount);
                 timeCount += Time.deltaTime;

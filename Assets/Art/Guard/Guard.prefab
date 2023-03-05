@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 2037612428646718896}
   - component: {fileID: 2037612428646718906}
   - component: {fileID: 4472739796070466475}
+  - component: {fileID: 1780082186}
   m_Layer: 2
   m_Name: Guard
   m_TagString: Untagged
@@ -224,31 +225,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputPatrols:
   - goToPoints:
-    - {x: 2, y: 2, z: 0}
+    - {x: 0.36, y: 4.37, z: 0}
     lookAtPoints:
-    - 90
+    - 206.23
   - goToPoints:
-    - {x: -4, y: 2, z: 0}
+    - {x: -17.13, y: 4.31, z: 0}
     lookAtPoints:
-    - 270
-  - goToPoints:
-    - {x: -7, y: 0, z: 0}
-    lookAtPoints:
-    - 180
-  - goToPoints:
-    - {x: -4, y: -2, z: 0}
-    lookAtPoints:
-    - 270
-  - goToPoints:
-    - {x: 2, y: -2, z: 0}
-    lookAtPoints:
-    - 315
+    - 213.36
   currentRotation: 0
-  start: {x: 4.52, y: 0.1, z: 0}
+  start: {x: 0.27, y: 0.1, z: 0}
   angle: 50
   rayRange: 6
   visionIndicator: {fileID: 256543585206679575}
   offset: {x: 0, y: 0.6, z: 0}
+  levelManager: {fileID: 0}
 --- !u!114 &4472739796070466475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,3 +258,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   guardMachine: {fileID: 2037612428646718906}
+--- !u!95 &1780082186
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037612428646718899}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9712b546693efda4da7a05cdcf3453ea, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
