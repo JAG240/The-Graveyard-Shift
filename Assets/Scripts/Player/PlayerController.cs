@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float swingCooldown = 1f;
     [SerializeField] private float swingRadius = 1f;
     [SerializeField] private int damage = 1;
+    [SerializeField] private Vector2 startingPos;
 
     private Rigidbody2D _body;
     private Animator _animator;
@@ -61,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
     public void StartDay(int day)
     {
+        transform.position = startingPos;
+
         if (day == 0)
         {
             MovementDisabled(true);

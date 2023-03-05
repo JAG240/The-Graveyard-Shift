@@ -14,6 +14,7 @@ public class PlayerInventory : MonoBehaviour
         _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 
         _levelManager.endDay += EndDay;
+        _levelManager.startDay += StartDay;
     }
 
     public bool AddToHand(string part)
@@ -32,6 +33,11 @@ public class PlayerInventory : MonoBehaviour
     {
         _inHand = null;
         _playerController.SwingDisabled(false);
+    }
+
+    private void StartDay(int day)
+    {
+        EndDay();
     }
 
     public string GetInHand()

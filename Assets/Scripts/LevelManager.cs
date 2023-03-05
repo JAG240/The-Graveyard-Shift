@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
 
     public event Action<bool> pauseDay;
 
+
     void Start()
     {
         StartDay();
@@ -22,8 +23,6 @@ public class LevelManager : MonoBehaviour
 
     public void EndDay()
     {
-        Debug.Log("Ending Day");
-
         endDay?.Invoke();
         if (_day < 6)
             _day++;
@@ -31,7 +30,6 @@ public class LevelManager : MonoBehaviour
 
     public void StartDay()
     {
-        Debug.Log($"Starting Day {_day}");
         startDay.Invoke(_day);
     }
 
