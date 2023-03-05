@@ -29,15 +29,15 @@ public class Detection : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        /* Vision Debugging
-         * Vector3 dir = Quaternion.AngleAxis(guardMachine.currentRotation + (detectionAngle / 2), Vector3.forward) * Vector3.right;
+        /* Vision Debugging */
+        Vector3 dir = Quaternion.AngleAxis(guardMachine.currentRotation + (detectionAngle / 2), Vector3.forward) * Vector3.right;
         Gizmos.DrawLine(offsetPosition + dir, offsetPosition + (dir * 3));
 
         Vector3 dir2 = Quaternion.AngleAxis(guardMachine.currentRotation - (detectionAngle / 2), Vector3.forward) * Vector3.right;
         Gizmos.DrawLine(offsetPosition + dir2, offsetPosition + (dir2 * 3));
 
         if (thing != null) 
-            Gizmos.DrawLine(offsetPosition, thing.transform.position);*/
+            Gizmos.DrawLine(offsetPosition, thing.transform.position);
     }
 
     private IEnumerator CheckForFood()
@@ -45,7 +45,6 @@ public class Detection : MonoBehaviour
         Vector3 direction;
         RaycastHit2D hit;
         float angle;
-
 
         while (true)
         {
@@ -55,15 +54,23 @@ public class Detection : MonoBehaviour
             if (thing)
             {
                 direction = thing.transform.position - offsetPosition;
-                angle = Vector3.Angle(direction, transform.right);
+                angle = Vector3.Angle(direction, transform.right) % 360;
                 if (thing.transform.position.y < offsetPosition.y) angle = 360 - angle;
+                if (angle < 0) angle += 360;
 
-                if (angle > guardMachine.currentRotation + (detectionAngle / 2) || angle < guardMachine.currentRotation - (detectionAngle / 2))
+                float currRot = guardMachine.currentRotation % 360;
+                if (currRot < 0)
+                {
+                    currRot += 360;
+                }
+
+                if (angle > currRot + (detectionAngle / 2) || angle < currRot - (detectionAngle / 2))
                     continue;
 
                 hit = Physics2D.Raycast(offsetPosition, direction);
                 if (hit && hit.transform.gameObject == thing.gameObject)
                 {
+                    // call restart day here guardMachine.levelManager
                     Debug.Log("Detected: " + thing);
                 }
             }
